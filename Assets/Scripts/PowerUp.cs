@@ -10,11 +10,14 @@ public class PowerUp : MonoBehaviour
     //Variable para asignar el tipo de PowerUp.
     [SerializeField]
     private int powerUpID; //0 = Diparo triple, 1 = Velocidad, 2 = escudo.
+    private AudioSource _audioSource;
+
 
     void Start()
     {
         //Inicializar la velocidad.
         _speed = 2.0f;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -37,9 +40,12 @@ public class PowerUp : MonoBehaviour
         //Preguntamos si jugador no está vacío.
         if(jugador != null)
         {
+            
+
             //Preguntamos si hemos chocado con el powerup de triple disparo.
-            if(powerUpID == 0)
+            if (powerUpID == 0)
             {
+                
                 //Mandamos ejecutar en Jugador el método de triple disparo a true.
                 jugador.TripleDisparoPowerupOn();
             }
@@ -60,6 +66,7 @@ public class PowerUp : MonoBehaviour
                 jugador.EscudoPowerupOn();
             }
         }
+       
         //Destruimos el powerUp.
         Destroy(this.gameObject);
     }

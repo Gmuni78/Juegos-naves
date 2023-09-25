@@ -1,30 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 // biblioteca para acceder a Image.
 using UnityEngine.UI;
 
-
-
-//TODO1
-//Crear una imagen que crea un canvas en Unity
-//Colocar en la imagen el sprite de la vida que queremos mostrar.
 // Poner el script en el objeto canvas.
-//Crear text y anclamos
-
 public class UIManager : MonoBehaviour
 {
-    //public Text score;
-    //TODO1
-    //Crear una variable de tipo Sprite de tipo array para las vidas.
-    //Lo rellenamos con los sprites de las vidas.
-    //Método de actualizar las vidas pasando las que quedan por parametros.
-
-    //Método para actualizar los puntos.
-    //Método para mostrar la pantalla.
-    //Método para ocultar la pantalla.
-
+    
+    //Crear una imagen que crea un canvas en Unity
+    [SerializeField]
+    private Sprite[] vidas;
+    //Dimensionar en Unity el array.
+    //Colocar en la imagen el sprite de la vida que queremos mostrar.
+    //Variable de tipo imagen y cargo la imagen en Unity.
+    [SerializeField]
+    private Image _imagenQueQueda;
+    //Variable para meter el texto del Canvas
+    //Utilizar el Text de Legacy.
+    [SerializeField]
+    private Text _puntosText;
+    //Variable de puntos
+    public int puntos;
+    //Varible tipo imagen para el titulo.
+    [SerializeField]
+    private GameObject _titulo;
 
     // Start is called before the first frame update
     void Start()
@@ -37,4 +37,35 @@ public class UIManager : MonoBehaviour
     {
         
     }
+    public void UpdateVidas(int vidasQuedan)
+    {
+        //Seleccionamos la imagen que se va a mostrar del array con el número de las vidas que nos trae.
+        //Y lo cargamos en la imagen del canvas.
+        _imagenQueQueda.sprite = vidas[vidasQuedan];
+    }
+    //Método para actualizar los puntos.
+    public void UpdatePuntos() 
+    {
+        //Sumar puntos.
+        puntos += 10;
+        //Comprobar si hemos cargado el UIManager.
+        if (_puntosText != null)
+        {
+            //Mostrar los puntos en el canvas.
+            _puntosText.text = "Puntos: " + puntos;
+        }
+    }
+    //Método para mostrar la pantalla.
+    public void MostrarTitulo()
+    {
+        //Mostrar imagen.
+        _titulo.SetActive(true);
+    }
+    //Método para ocultar la pantalla.
+    public void OcultarTitulo()
+    {
+        //Ocultar imagen
+       _titulo.SetActive(false);
+    }
+    
 }

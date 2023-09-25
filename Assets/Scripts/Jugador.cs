@@ -47,6 +47,11 @@ public class Jugador : MonoBehaviour
     //variable de gameObject para coger métodos.
     private GameManager _gameManager;
 
+    // Creo una variable de UIManager para acceder a ella.
+    private UIManager _uiManager;
+
+    //
+    private AudioSource _audiosource;
 
     private void Start()
     {
@@ -62,6 +67,11 @@ public class Jugador : MonoBehaviour
         vidas = 3;
         //cargo la clase de GameManager
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        //cojo el componente de sonido adiosouerce.
+        _audiosource = GetComponent<AudioSource>();
+        //cojo el componente de asteroirde
+
      }
 
     // Update is called once per frame
@@ -141,6 +151,9 @@ public class Jugador : MonoBehaviour
         //Preguntamos si podemos disparar.
         if (Time.time > _PuedesDisparar)
         {
+            //reproducir audio del disparo.
+
+            _audiosource.Play();
             //Si no es triple disparo.
             if (_TripleDisparo == false)
             {
