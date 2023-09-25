@@ -8,6 +8,7 @@ public class Jugador : MonoBehaviour
     public float horizontalInput;
     public float velocidad;
     public float verticalInput;
+    public float vidas;
     //Crear variable para coger el laser Prefab en Unity.
     [SerializeField]
     private GameObject _laserPrefab;
@@ -15,37 +16,53 @@ public class Jugador : MonoBehaviour
     private GameObject _meteoritoPrefab;
     //Variable que marque el tiempo entre disparos
     [SerializeField]
-    private float _espacioEntreDisparos;
+    private float _EspacioEntreDisparos;
     //segunda variable que diga que ya podemos disparar
     [SerializeField]
-    private float _puedesDisparar;
+    private float _PuedesDisparar;
 
     //generacion de meteoritos no oficial.
     //[SerializeField]
     //private float _generarMeteorito;
     //[SerializeField]
     //private float _tiempoEntreMeteoritos;
+    //variable triple disparo
+    [SerializeField]
+    private bool _TripleDisparo;
+    //variable de gameObjetct de prefab triple disparo.
+    [SerializeField]
+    private GameObject _TripleDisparoPrefab;
 
-    // Start is called before the first frame update
-    void Start()
+    //variable de más velocidad.
+    [SerializeField]
+    private bool _MasVelocidad;
+
+    //variable de escudo.
+    [SerializeField]
+    private bool _escudo;
+    //Variable de Gameobject de prefab de escudo hijo.
+    [SerializeField]
+    private GameObject _escudoHijo;
+
+    //variable de gameObject para coger métodos.
+    private GameManager _gameManager;
+
+
+    private void Start()
     {
-        //colocamos la nave de ataque en el centro.
-        //La cargamos en el start.
         this.transform.position = new Vector3(0, -2.45f, 0);
         velocidad = 5f;
-        //inicializar las variables de control de disparo
-        _espacioEntreDisparos= 0.25f;
-        _puedesDisparar = 0.0f;
-       /* _generarMeteorito = 0.0f;
-        _tiempoEntreMeteoritos = 5.0f;*/
-
-      // for (int i = 0; i < 5; i++)
-      // {
-           
-
-     //  }
-
-    }
+        _EspacioEntreDisparos = 0.25f;
+        _PuedesDisparar = 0.0f;
+        //iniciamos varibles de powerup.
+        _TripleDisparo = false;
+        _MasVelocidad = false;
+        _escudo = false;
+        //pongo el numero de vidas.
+        vidas = 3;
+        //cargo la clase de GameManager
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+     }
 
     // Update is called once per frame
     void Update()
@@ -53,9 +70,13 @@ public class Jugador : MonoBehaviour
         Movimiento();
         
         // Preguntamos si podemos preguntar.
-        if (Time.time > _puedesDisparar)
+        if (Time.time > _PuedesDisparar)
         {
-            Disparo();
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                //Llamar a Disparo.
+                Disparo();
+            }
         }
        /* if (Time.time>_generarMeteorito)
         {
@@ -74,8 +95,19 @@ public class Jugador : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        this.transform.Translate(horizontalInput * Time.deltaTime * velocidad * Vector3.right);
-        this.transform.Translate(Time.deltaTime * velocidad * verticalInput * Vector3.up);
+
+        if (_MasVelocidad == true)
+        {
+            //Multiplicamos por la supervelocidad.
+            this.transform.Translate(Vector3.right * velocidad * 3f * horizontalInput * Time.deltaTime);
+            this.transform.Translate(Vector3.up * velocidad * 3f * verticalInput * Time.deltaTime);
+        }
+        else
+        {
+            this.transform.Translate(horizontalInput * Time.deltaTime * velocidad * Vector3.right);
+            this.transform.Translate(Time.deltaTime * velocidad * verticalInput * Vector3.up);
+        }
+       
 
         if (transform.position.y > 1.60f)
         {
@@ -94,6 +126,7 @@ public class Jugador : MonoBehaviour
             transform.position = new Vector3(-5.50f, transform.position.y, 0);
         }
     }
+    /*hecho antes de las vacaciones.
     public void Disparo()
     {
         if (Input.GetKeyDown(KeyCode.Z) || Input.GetMouseButtonDown(0))
@@ -102,5 +135,69 @@ public class Jugador : MonoBehaviour
             _puedesDisparar = Time.time + _espacioEntreDisparos;
         }
        
+    }*/
+    public void Disparo()
+    {
+        //Preguntamos si podemos disparar.
+        if (Time.time > _PuedesDisparar)
+        {
+            //Si no es triple disparo.
+            if (_TripleDisparo == false)
+            {
+                //Crear el objeto(cojo el objeto,cojo la posición de la nave y le sumo un vector para que
+                //se coloque y le pongo rotación a 0.
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.65f, 0), Quaternion.identity);
+            }
+            else
+            {
+                //Creamos el disparo triple.
+                Instantiate(_TripleDisparoPrefab, transform.position + new Vector3(0, 0.65f, 0), Quaternion.identity);
+            }
+            //Establecemos el nuevo valor del tiempo de disparo.
+            _PuedesDisparar = Time.time + _EspacioEntreDisparos;
+        }
+    }
+    //Creamos el método que activa el triple disparo.
+    public void TripleDisparoPowerupOn()
+    {
+        //Hacemos que el powerup triple disparo se active.
+        _TripleDisparo = true;
+    }
+    public void SuperVelocidadPowerupOn()
+    {
+        //Hacemos que el powerup super velocidad se active.
+        _MasVelocidad = true;
+    }
+    public void EscudoPowerupOn()
+    {
+        //Hacemos que el powerup escudo se active.
+        _escudo = true;
+        //Activamos que sea visible el escudo.
+        _escudoHijo.SetActive(true);
+    }
+    //Método para quitar las vidas.
+    public void Damage()
+    {
+        //Preguntamos si el escudo está activado.
+        if (_escudo == true)
+        {
+            //Desactivamos el escudo.
+            _escudo = false;
+            //Dejamos de ver el escudo.
+            _escudoHijo.SetActive(false);
+            //Termino el método.
+            return;
+        }
+        //Quitamos una vida.
+        vidas--;
+
+        //Preguntamos si quedan vidas.
+        if (vidas < 1)
+        {
+            //Vuelvo a estar en juego para crear una nueva vida.
+            _gameManager.game = true;
+            //Destruimos la nave.
+            Destroy(this.gameObject);
+        }
     }
 }

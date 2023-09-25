@@ -7,6 +7,7 @@ public class Laser : MonoBehaviour
     //Variable privada de forma serializada para que se pueda ver y modificar en Unity.
     [SerializeField]
     private float speed;
+    private GameManager gameManager;
     
     void Start()
     {
@@ -26,10 +27,10 @@ public class Laser : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collaider: " + collision.name);
+       // Debug.Log("Collaider: " + collision.name);
         //nuestro profesor nos puso.
         //if ((collision.Tag == "Meteorito"))
-        if ((collision.CompareTag("Meteorito")))
+        if (collision.tag=="Meteorito")
         {
             Destroy(gameObject);
         }

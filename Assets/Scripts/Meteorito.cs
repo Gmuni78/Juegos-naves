@@ -25,6 +25,7 @@ public class Meteorito : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        /* lo mio
         Debug.Log("Collaider: " + collision.name);
         //como nos lo escribe el profesor
         // if ((collision.tag == "Laser"))
@@ -32,6 +33,30 @@ public class Meteorito : MonoBehaviour
         if ((collision.CompareTag("Laser")))
         {
             Destroy(gameObject);
+        }*/
+        //Debug.Log("Collaider: " + collision.name); con los daños
+        //Si colisiona con el laser se destruye.
+        if (collision.tag == "Laser")
+        {
+            //Destruimos el asteroide
+            Destroy(this.gameObject);
+        }
+        //Si chocamos con el jugador
+        else if (collision.tag == "Nave")
+        {
+            //Acceder a la clase del jugador para acceder a los métodos.
+            Jugador jugador = collision.GetComponent<Jugador>();
+            //Comprobamos si se ha cargado todos los métodos de jugador.
+            if (jugador != null)
+            {
+                //Llamar al método que le quita una vida.
+                jugador.Damage();
+            }
+            //Destruimos el asteroide.
+            Destroy(this.gameObject);
+            
+
+
         }
     }
 }
