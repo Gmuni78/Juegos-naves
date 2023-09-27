@@ -16,8 +16,9 @@ public class GameManager : MonoBehaviour
     private GameObject _jugadorPrefab;
     //Variable se han acabado las vidas.
     public bool game;
-    //TODO1 Variable de acceso a UIManager
 
+    //Variable de acceso a UIManager
+    private UIManager _uIManager;
 
     void Start()
     {
@@ -28,7 +29,8 @@ public class GameManager : MonoBehaviour
         //Variable de si jugamos o no.
         game = true;
 
-        //TODO1 Cargo el componente UIManager de la clase UIManager.
+        //Cargo el componente UIManager de la clase UIManager.
+        _uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
     private void Update()
     {
@@ -43,7 +45,8 @@ public class GameManager : MonoBehaviour
                 //La vida se está utilizando y no cree una nueva vida
                 game = false;
 
-                //TODO1 Llamamos a la función que nos oculta el panel de inicio de jugador.
+                //Llamamos a la función que nos oculta el panel de inicio de jugador.
+                _uIManager.OcultarTitulo();
             }
 
         }

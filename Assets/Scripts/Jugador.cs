@@ -8,7 +8,7 @@ public class Jugador : MonoBehaviour
     public float horizontalInput;
     public float velocidad;
     public float verticalInput;
-    public float vidas;
+    public int vidas;
     //Crear variable para coger el laser Prefab en Unity.
     [SerializeField]
     private GameObject _laserPrefab;
@@ -36,6 +36,9 @@ public class Jugador : MonoBehaviour
     //variable de más velocidad.
     [SerializeField]
     private bool _MasVelocidad;
+    //Variable para la prefab de  la explosion.
+    [SerializeField]
+    private GameObject _naveExplosion;
 
     //variable de escudo.
     [SerializeField]
@@ -50,7 +53,7 @@ public class Jugador : MonoBehaviour
     // Creo una variable de UIManager para acceder a ella.
     private UIManager _uiManager;
 
-    //
+    //Creo una variable de tipo sonido para contener el laser.
     private AudioSource _audiosource;
 
     private void Start()
@@ -68,10 +71,17 @@ public class Jugador : MonoBehaviour
         //cargo la clase de GameManager
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
+        //Cargo UIManager y pregunto si está.
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        //Preguntamos si se ha cargado los componentes.
+        if (_uiManager != null)
+        {
+            //Llamamos al método de UIManager para mandarle las vidas.
+            _uiManager.UpdateVidas(vidas);
+        }
+
         //cojo el componente de sonido adiosouerce.
         _audiosource = GetComponent<AudioSource>();
-        //cojo el componente de asteroirde
-
      }
 
     // Update is called once per frame
@@ -175,19 +185,50 @@ public class Jugador : MonoBehaviour
     {
         //Hacemos que el powerup triple disparo se active.
         _TripleDisparo = true;
+     //   StartCoroutine(TripleshotPowerRoutine());
+        // Tiempo de espera del triple disparo.
+  /*   public IEnumerator TripleshotPowerRoutine()
+        {
+            //Establece el nuevo tempo de espera.
+            yield return new WaitForSeconds(5.0f);
+            //Desactivamos el powerup.
+            _tripleDisparo = false;
+        }*/
     }
     public void SuperVelocidadPowerupOn()
     {
         //Hacemos que el powerup super velocidad se active.
         _MasVelocidad = true;
+        // Llamamos a la coroutine y la inicializamos.
+     //   StartCoroutine(SuperVelocidadPowerRoutine());
     }
+    // Tiempo de espera del triple disparo.
+    /*public IEnumerator SuperVelocidadPowerRoutine()
+    {
+        //Establece el nuevo tempo de espera.
+        yield return new WaitForSeconds(5.0f);
+        //Desactivamos el powerup.
+        _MasVelocidad = false;
+    }*/
     public void EscudoPowerupOn()
     {
         //Hacemos que el powerup escudo se active.
         _escudo = true;
         //Activamos que sea visible el escudo.
         _escudoHijo.SetActive(true);
+        // Llamamos a la coroutine y la inicializamos.
+      //  StartCoroutine(EscudoPowerRoutine());
     }
+    // Tiempo de espera del triple disparo.
+    /*public IEnumerator EscudoPowerRoutine()
+    {
+        //Establece el nuevo tempo de espera.
+        yield return new WaitForSeconds(5.0f);
+        //Desactivamos el powerup.
+        _escudo = false;
+        //Desactivamos que sea visible el escudo.
+        _escudoHijo.SetActive(false);
+    }*/
     //Método para quitar las vidas.
     public void Damage()
     {
@@ -203,12 +244,20 @@ public class Jugador : MonoBehaviour
         }
         //Quitamos una vida.
         vidas--;
+        //Llamo al método de UpdateVidas y le mando las vidas que quedan.
+        _uiManager.UpdateVidas(vidas);
 
         //Preguntamos si quedan vidas.
         if (vidas < 1)
         {
             //Vuelvo a estar en juego para crear una nueva vida.
             _gameManager.game = true;
+
+            //Mostrar el título.
+            _uiManager.MostrarTitulo();
+
+            //Creamos la explosión.
+            Instantiate(_naveExplosion, transform.position, Quaternion.identity);
             //Destruimos la nave.
             Destroy(this.gameObject);
         }

@@ -66,7 +66,8 @@ public class PowerUp : MonoBehaviour
                 jugador.EscudoPowerupOn();
             }
         }
-       
+        //Ejecuto el audio
+        _audioSource.Play();
         //Destruimos el powerUp.
         Destroy(this.gameObject);
     }
