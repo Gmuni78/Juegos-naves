@@ -19,12 +19,14 @@ public class UIManager : MonoBehaviour
     //Variable para meter el texto del Canvas
     //Utilizar el Text de Legacy.
     [SerializeField]
-    private Text _puntosText;
+    private Text _PuntosText;
     //Variable de puntos
     public int puntos;
     //Varible tipo imagen para el titulo.
     [SerializeField]
     private GameObject _titulo;
+    [SerializeField]
+    private GameObject _fondo;
 
     // Start is called before the first frame update
     void Start()
@@ -49,10 +51,10 @@ public class UIManager : MonoBehaviour
         //Sumar puntos.
         puntos += 10;
         //Comprobar si hemos cargado el UIManager.
-        if (_puntosText != null)
+        if (_PuntosText != null)
         {
             //Mostrar los puntos en el canvas.
-            _puntosText.text = "Puntos: " + puntos;
+            _PuntosText.text = "Puntos: " + puntos;
         }
     }
     //Método para mostrar la pantalla.
@@ -60,12 +62,13 @@ public class UIManager : MonoBehaviour
     {
         //Mostrar imagen.
         _titulo.SetActive(true);
+        _fondo.SetActive(true);
     }
     //Método para ocultar la pantalla.
-    public void OcultarTitulo()
-    {
-        //Ocultar imagen
-       _titulo.SetActive(false);
-    }
+    //public void OcultarTitulo()
+    //{
+    //    //Ocultar imagen
+    //   _titulo.SetActive(false);
+    //}
     
 }

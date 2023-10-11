@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _velocidadMete: 0
+  _explosionMete: {fileID: 4611376211134093875, guid: 7581fbc49cad180429f1824ab5a3432d, type: 3}
 --- !u!50 &-7187641833154381922
 Rigidbody2D:
   serializedVersion: 4

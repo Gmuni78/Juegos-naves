@@ -10,21 +10,21 @@ public class PowerUp : MonoBehaviour
     //Variable para asignar el tipo de PowerUp.
     [SerializeField]
     private int powerUpID; //0 = Diparo triple, 1 = Velocidad, 2 = escudo.
-    private AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _audioClip;
 
 
     void Start()
     {
         //Inicializar la velocidad.
         _speed = 2.0f;
-        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //Baje el powerUp.
-        this.transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        this.transform.Translate(_speed * Time.deltaTime * Vector3.down);
         //TODO si baja de la base de la nave se destruye.
         if (this.gameObject.transform.position.y < -5f)
         {
@@ -37,11 +37,11 @@ public class PowerUp : MonoBehaviour
         //Debug.Log("Choca con " + collision.name);
         //Creo un objeto de tipo clase Jugador y obtengo todos los métodos(Componentes).
         Jugador jugador = collision.GetComponent<Jugador>();
+
         //Preguntamos si jugador no está vacío.
         if(jugador != null)
         {
-            
-
+           
             //Preguntamos si hemos chocado con el powerup de triple disparo.
             if (powerUpID == 0)
             {
@@ -66,8 +66,8 @@ public class PowerUp : MonoBehaviour
                 jugador.EscudoPowerupOn();
             }
         }
-        //Ejecuto el audio
-        _audioSource.Play();
+
+        AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
         //Destruimos el powerUp.
         Destroy(this.gameObject);
     }

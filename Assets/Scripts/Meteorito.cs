@@ -6,9 +6,15 @@ public class Meteorito : MonoBehaviour
 {
     [SerializeField]
     private float _velocidadMete;
+    //Variable para cargar el UIManager.
+    private UIManager _uiManager;
+    [SerializeField]
+    private GameObject _explosionMete;
     void Start()
     {
         _velocidadMete = 2.0f;
+        //Cargamos los componentes del UIManager
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
     
@@ -34,12 +40,18 @@ public class Meteorito : MonoBehaviour
         {
             Destroy(gameObject);
         }*/
-        //Debug.Log("Collaider: " + collision.name); con los daños
+        //Debug.Log("Collaider: " + collision.name); con los daños.
         //Si colisiona con el laser se destruye.
         if (collision.tag == "Laser")
         {
+            Instantiate(_explosionMete, transform.position, Quaternion.identity);
             //Destruimos el asteroide
             Destroy(this.gameObject);
+            if (_uiManager != null)
+            {
+                //llamo al método de actualizar los puntos.
+                _uiManager.UpdatePuntos();
+            }
         }
         //Si chocamos con el jugador
         else if (collision.tag == "Nave")
@@ -52,6 +64,7 @@ public class Meteorito : MonoBehaviour
                 //Llamar al método que le quita una vida.
                 jugador.Damage();
             }
+
             //Destruimos el asteroide.
             Destroy(this.gameObject);
             

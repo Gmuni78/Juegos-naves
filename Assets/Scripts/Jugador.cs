@@ -55,6 +55,8 @@ public class Jugador : MonoBehaviour
 
     //Creo una variable de tipo sonido para contener el laser.
     private AudioSource _audiosource;
+    [SerializeField]
+    private AudioClip _audioClip;
 
     private void Start()
     {
@@ -119,8 +121,8 @@ public class Jugador : MonoBehaviour
         if (_MasVelocidad == true)
         {
             //Multiplicamos por la supervelocidad.
-            this.transform.Translate(Vector3.right * velocidad * 3f * horizontalInput * Time.deltaTime);
-            this.transform.Translate(Vector3.up * velocidad * 3f * verticalInput * Time.deltaTime);
+            this.transform.Translate(3f * horizontalInput * Time.deltaTime * velocidad * Vector3.right);
+            this.transform.Translate(3f * Time.deltaTime * velocidad * verticalInput * Vector3.up);
         }
         else
         {
@@ -185,31 +187,31 @@ public class Jugador : MonoBehaviour
     {
         //Hacemos que el powerup triple disparo se active.
         _TripleDisparo = true;
-     //   StartCoroutine(TripleshotPowerRoutine());
+        StartCoroutine(TripleshotPowerRoutine());
         // Tiempo de espera del triple disparo.
-  /*   public IEnumerator TripleshotPowerRoutine()
+    IEnumerator TripleshotPowerRoutine()
         {
             //Establece el nuevo tempo de espera.
             yield return new WaitForSeconds(5.0f);
             //Desactivamos el powerup.
-            _tripleDisparo = false;
-        }*/
+            _TripleDisparo = false;
+        }
     }
     public void SuperVelocidadPowerupOn()
     {
         //Hacemos que el powerup super velocidad se active.
         _MasVelocidad = true;
         // Llamamos a la coroutine y la inicializamos.
-     //   StartCoroutine(SuperVelocidadPowerRoutine());
+       StartCoroutine(SuperVelocidadPowerRoutine());
     }
     // Tiempo de espera del triple disparo.
-    /*public IEnumerator SuperVelocidadPowerRoutine()
+     IEnumerator SuperVelocidadPowerRoutine()
     {
         //Establece el nuevo tempo de espera.
         yield return new WaitForSeconds(5.0f);
         //Desactivamos el powerup.
         _MasVelocidad = false;
-    }*/
+    }
     public void EscudoPowerupOn()
     {
         //Hacemos que el powerup escudo se active.
@@ -217,10 +219,10 @@ public class Jugador : MonoBehaviour
         //Activamos que sea visible el escudo.
         _escudoHijo.SetActive(true);
         // Llamamos a la coroutine y la inicializamos.
-      //  StartCoroutine(EscudoPowerRoutine());
+         StartCoroutine(EscudoPowerRoutine());
     }
     // Tiempo de espera del triple disparo.
-    /*public IEnumerator EscudoPowerRoutine()
+    public IEnumerator EscudoPowerRoutine()
     {
         //Establece el nuevo tempo de espera.
         yield return new WaitForSeconds(5.0f);
@@ -228,7 +230,7 @@ public class Jugador : MonoBehaviour
         _escudo = false;
         //Desactivamos que sea visible el escudo.
         _escudoHijo.SetActive(false);
-    }*/
+    }
     //Método para quitar las vidas.
     public void Damage()
     {
@@ -256,6 +258,7 @@ public class Jugador : MonoBehaviour
             //Mostrar el título.
             _uiManager.MostrarTitulo();
 
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
             //Creamos la explosión.
             Instantiate(_naveExplosion, transform.position, Quaternion.identity);
             //Destruimos la nave.

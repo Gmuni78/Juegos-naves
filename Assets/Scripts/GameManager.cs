@@ -38,16 +38,16 @@ public class GameManager : MonoBehaviour
         if (game == true)
         {
             //Si presione la tecla Espacio creo una nueva nave.
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
+            //if (Input.GetKeyDown(KeyCode.Space))
+           // {
                 //Creamos el jugador
                 Instantiate(_jugadorPrefab, Vector3.zero, Quaternion.identity);
                 //La vida se está utilizando y no cree una nueva vida
                 game = false;
 
                 //Llamamos a la función que nos oculta el panel de inicio de jugador.
-                _uIManager.OcultarTitulo();
-            }
+               // _uIManager.OcultarTitulo();
+           // }
 
         }
     }
